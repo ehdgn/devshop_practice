@@ -18,6 +18,7 @@ public class CartService {
     private final CartRepository cartRepository;
     private final CartItemRepository cartItemRepository;
 
+
     // 장바구니 아이템 목록
     public List<CartResponse.CartItemListDTO> getCartItems(Long cartId) {
 
@@ -35,14 +36,16 @@ public class CartService {
     // +) 추가하는 아이템이 이미 장바구니에 있으면 [상품 id와 옵션(사이즈, 색깔 등) 확인]
     // -> 오류 발생(이미 장바구니에 있는 아이템입니다.)
     @Transactional
-    public void addCartItem(Long cartItemId, CartRequest.AddDTO addDTO) {
+    public void addCartItem(Long cartId, CartRequest.AddDTO addDTO) {
 
-        Cart cartEntity = cartRepository.findById(addDTO.getCart().getId())
+        Cart cartEntity = cartRepository.findById(cartId)
                 .orElseThrow(() -> new Exception404("장바구니를 찾을 수 없습니다."));
 
         // 나중에 product option 까지 확인해서 찾는 로직으로 변경
-        CartItem item = cartItemRepository.findByCart_IdAndId(addDTO.getCart().getId(), cartItemId)
-                        .orElse(null);
+//        CartItem item = cartItemRepository.findByCart_IdAndId(addDTO.getCart().getId(), cartItemId)
+//                        .orElse(null);
+
+        CartItem item = null;
 
         if (item != null) {
             throw new Exception400("이미 장바구니에 있습니다.");
@@ -52,14 +55,27 @@ public class CartService {
         }
     }
 
-    // 아이템 삭제
+    // 체크된 아이템 삭제
     @Transactional
-    public void removeCartItem(Long cartId) {
+    public void removeCheckedCartItem(Long cartId) {
 
         cartRepository.findById(cartId)
                         .orElseThrow(() -> new Exception404("장바구니를 찾을 수 없습니다."));
 
         cartItemRepository.deleteByCartIdAndIsChecked(cartId);
+    }
+
+    // 아이템 단건 삭제
+    @Transactional
+    public void removeCartItem(Long cartId, Long cartItemId) {
+        CartItem cartItem = cartItemRepository.findById(cartItemId)
+                .orElseThrow(() -> new Exception404("아이템을 찾을 수 없습니다."));
+
+        if (!cartItem.getCart().getId().equals(cartId)) {
+            throw new Exception400("잘못된 요청입니다.");
+        }
+
+        cartItemRepository.delete(cartItem);
     }
 
     // 아이템 선택

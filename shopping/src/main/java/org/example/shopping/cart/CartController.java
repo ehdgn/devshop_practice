@@ -2,7 +2,10 @@ package org.example.shopping.cart;
 
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import org.example.shopping._core.errors.exception.Exception400;
 import org.example.shopping._core.errors.exception.Exception401;
+import org.example.shopping._core.errors.exception.Exception404;
+import org.example.shopping.cartItem.CartItem;
 import org.example.shopping.cartItem.CartItemRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,8 +19,14 @@ import java.util.List;
 @Controller
 public class CartController {
     private final CartRepository cartRepository;
-    private final CartItemRepository cartItemRepository;
     private final CartService cartService;
+    private final CartItemRepository cartItemRepository;
+
+//    @PostMapping("/cart/create")
+//    public String createCart() {
+//        cartRepository.save(new Cart());
+//        return "redirect:/cart/list";
+//    }
 
     // 장바구니 아이템 목록 화면 요청
     // http://localhost:8080/cart/list
@@ -25,37 +34,36 @@ public class CartController {
     public String cartItemList(Long cartId, Model model, HttpSession session) {
         List<CartResponse.CartItemListDTO> cartItems = cartService.getCartItems(cartId);
 
-        String sessionUser = (String) session.getAttribute("sessionUser");
-        if (sessionUser == null) {
-            throw new Exception401("로그인이 필요한 서비스입니다.");
-        }
-
         model.addAttribute("cartItems", cartItems);
+        model.addAttribute("cartId", cartId);
         return "cart/list";
     }
 
-    // 아이템 추가
     @PostMapping("/cart/{id}/add")
     public String addProc(Long cartId, CartRequest.AddDTO addDTO, HttpSession session) {
         String sessionUser = (String) session.getAttribute("sessionUser");
-        if (sessionUser == null) {
-            throw new Exception401("로그인이 필요한 서비스입니다.");
-        }
 
         cartService.addCartItem(cartId, addDTO);
 
         return "redirect:/cart/list";
     }
 
-    // 아이템 제거
+
+    // 체크된 아이템 제거
     @PostMapping("/cart/{cartId}/delete")
     public String delete(@PathVariable Long cartId, HttpSession session) {
         String sessionUser = (String) session.getAttribute("sessionUser");
-        if (sessionUser == null) {
-            throw new Exception401("로그인이 필요한 서비스입니다.");
-        }
 
-        cartService.removeCartItem(cartId);
+        cartService.removeCheckedCartItem(cartId);
+
+        return "redirect:/cart/list";
+    }
+
+    // 아이템 단건 삭제 - 새로운 거
+    @PostMapping("/cart/{cartId}/{cartItemId}/delete")
+    public String deleteOne(@PathVariable Long cartId, @PathVariable Long cartItemId) {
+
+        cartService.removeCartItem(cartId, cartItemId);
 
         return "redirect:/cart/list";
     }

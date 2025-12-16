@@ -1,10 +1,251 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DevShop Header</title>
+    <link rel="stylesheet" href="/css/cart-style.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+        }
+
+        .header {
+            background: white;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            padding: 8px 20px;
+            font-size: 12px;
+            gap: 15px;
+            background: #fafafa;
+        }
+
+        .top-bar a {
+            color: #666;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .top-bar a:hover {
+            color: #000;
+        }
+
+        .main-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            font-style: italic;
+            letter-spacing: 1px;
+        }
+
+        .header-icons {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .cart-icon, .menu-icon {
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+            transition: opacity 0.3s;
+        }
+
+        .cart-icon:hover, .menu-icon:hover {
+            opacity: 0.7;
+        }
+
+        .nav {
+            display: flex;
+            gap: 30px;
+            padding: 15px 20px;
+            border-top: 1px solid #f0f0f0;
+        }
+
+        .nav a {
+            color: #333;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav a:hover {
+            color: #666;
+        }
+
+        @media (max-width: 768px) {
+            .nav {
+                overflow-x: auto;
+                white-space: nowrap;
+            }
+
+            .top-bar {
+                font-size: 11px;
+                gap: 10px;
+            }
+        }
+    </style>
 </head>
 <body>
+<header class="header">
+    <div class="top-bar">
+        <a href="#">고객센터</a>
+        <a href="#">마이페이지</a>
+        <a href="#">로그인</a>
+    </div>
 
+    <div class="main-header">
+        <div class="logo">DEVSHOP</div>
+        <div class="header-icons">
+            <svg class="cart-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M9 2L7.17 4H2v2h2l3.6 7.59L6.25 16.04C6.09 16.32 6 16.65 6 17c0 1.1.9 2 2 2h12v-2H8.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49A1 1 0 0020.01 6H6.21l-.94-2H9V2zM7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zm10 0c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/>
+            </svg>
+            <svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M3 12h18M3 6h18M3 18h18"/>
+            </svg>
+        </div>
+    </div>
+
+    <nav class="nav">
+        <a href="#">키보드</a>
+        <a href="#">손목받침대</a>
+        <a href="#">옷</a>
+        <a href="#">머그컵</a>
+        <a href="#">액세서리</a>
+    </nav>
+</header>
+
+<main class="main-container">
+    <h1 class="page-title">장바구니</h1>
+
+    <div class="cart-layout">
+        <!-- 왼쪽: 장바구니 상품 목록 -->
+        <div class="cart-left">
+            <div class="cart-header">
+                <div class="tab active">
+                    KREAM 배송
+                    <span class="count">1</span>
+                </div>
+            </div>
+
+            <div class="select-all">
+                <label class="checkbox-label">
+                    <input type="checkbox" checked>
+                    <span class="checkmark"></span>
+                    전체 선택
+                </label>
+                <button class="delete-btn">선택 삭제</button>
+            </div>
+
+            <div class="delivery-info">
+                <div class="info-row">
+                    <span class="label">네이버페이</span>
+                    <span class="value">라인프렌즈카드 4% 적립 (20만P까지)</span>
+                    <button class="detail-btn">더보기</button>
+                </div>
+                <div class="info-row">
+                    <span class="label">롯데카드</span>
+                    <span class="value">3% 즉시할인</span>
+                    <button class="detail-btn">더보기</button>
+                </div>
+            </div>
+
+            <!-- 상품 아이템 -->
+            <div class="cart-item">
+                <label class="checkbox-label">
+                    <input type="checkbox" checked>
+                    <span class="checkmark"></span>
+                </label>
+
+                <div class="item-content">
+                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80'%3E%3Crect fill='%23333' width='80' height='80'/%3E%3Ctext fill='%23fff' font-size='12' x='50%25' y='50%25' text-anchor='middle' dy='.3em'%3EProduct%3C/text%3E%3C/svg%3E" alt="상품 이미지" class="item-image">
+
+                    <div class="item-info">
+                        <h3 class="item-brand">Maison Margiela Leather Bi-Fold Card Holder Black</h3>
+                        <p class="item-desc">메종 마르지엘라 레더 바이폴드 카드 홀더 블랙</p>
+                        <p class="item-code">S55UI0203P4745TR013</p>
+                        <div class="item-option">
+                            <span class="size">ONE SIZE</span>
+                            <span class="stock-status">✓ 빠른배송</span>
+                        </div>
+                    </div>
+
+                    <div class="item-actions">
+                        <button class="action-btn">삭제</button>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <!-- 옵션/배송 변경 버튼 -->
+            <div class="action-buttons">
+                <button class="btn-outline">옵션/배송 변경</button>
+                <button class="btn-primary">바로 주문</button>
+            </div>
+        </div>
+
+        <!-- 오른쪽: 결제 정보 -->
+        <div class="cart-right">
+            <div class="payment-box">
+                <h2 class="payment-title">예상 결제금액</h2>
+                <div class="price-summary">
+                    <div class="price-row total">
+                        <span class="label">273,500원</span>
+                        <button class="dropdown-btn">▼</button>
+                    </div>
+                </div>
+
+                <div class="order-details">
+                    <h3 class="section-title">선택 주문정보</h3>
+                    <div class="detail-row">
+                        <span class="label">총 상품금액</span>
+                        <span class="value">260,000원</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="label">검수비</span>
+                        <span class="value">무료</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="label">수수료</span>
+                        <span class="value">8,500원</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="label">배송비</span>
+                        <span class="value">5,000원</span>
+                    </div>
+                </div>
+
+                <button class="checkout-btn">273,500원 · 총 1건 주문하기</button>
+            </div>
+
+            <div class="payment-info">
+                <p class="info-text">상품금액</p>
+                <p class="info-price">260,000원</p>
+                <p class="delivery-info-text">
+                    검수 합격 · 내일 12/17(수) 도착 예정 ⓘ
+                </p>
+            </div>
+        </div>
+    </div>
+</main>
 </body>
 </html>
