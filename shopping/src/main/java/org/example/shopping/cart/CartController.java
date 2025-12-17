@@ -2,16 +2,14 @@ package org.example.shopping.cart;
 
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
-import org.example.shopping._core.errors.exception.Exception400;
 import org.example.shopping._core.errors.exception.Exception401;
-import org.example.shopping._core.errors.exception.Exception404;
-import org.example.shopping.cartItem.CartItem;
 import org.example.shopping.cartItem.CartItemRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
 
@@ -22,17 +20,19 @@ public class CartController {
     private final CartService cartService;
     private final CartItemRepository cartItemRepository;
 
-//    @PostMapping("/cart/create")
-//    public String createCart() {
-//        cartRepository.save(new Cart());
-//        return "redirect:/cart/list";
-//    }
+    @PostMapping("/cart/create")
+    public String createCart() {
+        cartRepository.save(new Cart());
+        return "redirect:/cart/list";
+    }
 
     // 장바구니 아이템 목록 화면 요청
     // http://localhost:8080/cart/list
     @GetMapping("/cart/list")
-    public String cartItemList(Long cartId, Model model, HttpSession session) {
+    public String cartItemList(Model model, HttpSession session) {
+        Long cartId = 1L;
         List<CartResponse.CartItemListDTO> cartItems = cartService.getCartItems(cartId);
+
 
         model.addAttribute("cartItems", cartItems);
         model.addAttribute("cartId", cartId);
@@ -40,7 +40,7 @@ public class CartController {
     }
 
     @PostMapping("/cart/{id}/add")
-    public String addProc(Long cartId, CartRequest.AddDTO addDTO, HttpSession session) {
+    public String addProc(@PathVariable(name = "id") Long cartId, CartRequest.AddDTO addDTO, HttpSession session) {
         String sessionUser = (String) session.getAttribute("sessionUser");
 
         cartService.addCartItem(cartId, addDTO);
@@ -50,7 +50,7 @@ public class CartController {
 
 
     // 체크된 아이템 제거
-    @PostMapping("/cart/{cartId}/delete")
+    @PostMapping("/cart/{cartId}/delete-checked")
     public String delete(@PathVariable Long cartId, HttpSession session) {
         String sessionUser = (String) session.getAttribute("sessionUser");
 
@@ -70,15 +70,13 @@ public class CartController {
 
     // 아이템 선택
     @PostMapping("/cart/{cartId}/{cartItemId}/update/check")
+    @ResponseBody
     public String updateCheck(@PathVariable Long cartId, @PathVariable Long cartItemId, HttpSession session) {
         String sessionUser = (String) session.getAttribute("sessionUser");
-        if (sessionUser == null) {
-            throw new Exception401("로그인이 필요한 서비스입니다.");
-        }
 
         cartService.checkItem(cartId, cartItemId);
 
-        return "redirect:/cart/list";
+        return "success";
     }
 
     // 아이템 개수/옵션 변경
